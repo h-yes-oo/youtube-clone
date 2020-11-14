@@ -124,6 +124,7 @@ function VideoUploadPage(props) {
                 </div>
                 <br />
                 <br />
+                <label>Title</label>
                 <Input 
                     onChange = {onTitleChange}
                     value = {videoTitle}
