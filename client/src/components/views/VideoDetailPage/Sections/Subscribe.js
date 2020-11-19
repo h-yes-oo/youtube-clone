@@ -4,7 +4,7 @@ import Axios from 'axios';
 function Subscribe(props) {
 
     const [ subscribeNumber, setSubscribeNumber ] = useState(0);
-    const [subscribed, setSubscribed] = useState(false);
+    const [ subscribed, setSubscribed ] = useState(false);
     useEffect(() => {
         let variable = { userTo: props.userTo }
         Axios.post('/api/subscribe/subscribeNumber', variable)
@@ -16,7 +16,7 @@ function Subscribe(props) {
                 }
             })
         
-        let subscribeVariable = { userTo: props.userTo, userFrom: localStorage.getItem('userId')}
+        let subscribeVariable = { userTo: props.userTo, userFrom: props.userFrom}
         
         Axios.post('/api/subscribe/subscribed', subscribeVariable)
         .then(response => {
@@ -28,6 +28,37 @@ function Subscribe(props) {
         })
 
     }, [])
+
+    const onSubscribe = () => {
+        let subscribeVariable = {
+            userTo: props.userTo, 
+            userFrom: props.userFrom
+        }
+        if(subscribed){
+            //구독중
+            Axios.post('/api/subscribe/unsubscribe', subscribeVariable)
+            .then(response => {
+                if(response.data.success){
+                    setSubscribeNumber(subscribeNumber - 1);
+                    setSubscribed(!subscribed);
+                } else {
+                    alert('구독 취소 실패 !!');
+                }
+            })
+        } else {
+            //구독하지 않을 때
+            Axios.post('/api/subscribe/subscribe', subscribeVariable)
+            .then(response => {
+                if(response.data.success){
+                    setSubscribeNumber(subscribeNumber + 1);
+                    setSubscribed(!subscribed);
+                } else {
+                    alert('구독 실패 !!')
+                }
+            })
+        }
+    }
+
     return (
         <div>
             <button
@@ -36,8 +67,7 @@ function Subscribe(props) {
                     color: 'white', borderRadius: '4px',
                     fontWeight: '500', fontSize: '1rem', textTransform: 'uppercase'
                 }}
-                onClick 
-
+                onClick={onSubscribe}
             >
                 {subscribeNumber} {subscribed? 'Subscribed': 'Subscribe'}
             </button>
