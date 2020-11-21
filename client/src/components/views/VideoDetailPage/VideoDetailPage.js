@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Row, Col, List, Avatar } from "antd";
 import Axios from 'axios';
-import SideVideo from './Sections/SideVideo'
-import Subscribe from './Sections/Subscribe'
+import SideVideo from './Sections/SideVideo';
+import Subscribe from './Sections/Subscribe';
+import Comment from './Sections/Comment';
 
 function VideoDetailPage(props) {
-    const variable = {
-        videoId: props.match.params.videoId
-    }
+    const videoId = props.match.params.videoId;
+    const variable = { videoId: videoId }
 
     const [VideoDetail, setVideoDetail] = useState([]);
 
@@ -23,6 +23,11 @@ function VideoDetailPage(props) {
     }, [])
 
     if(VideoDetail.writer){
+
+        const subscribeButton = VideoDetail.writer._id !== localStorage.getItem('userId') && <Subscribe 
+        userTo={VideoDetail.writer._id}
+        userFrom={localStorage.getItem('userId')}
+        />
         return (
         <Row gutter={[16, 16]}>
             <Col lg={18} xs={24}>
@@ -32,10 +37,7 @@ function VideoDetailPage(props) {
                     />
                     <List.Item 
                         actions={[
-                        <Subscribe 
-                            userTo={VideoDetail.writer._id}
-                            userFrom={localStorage.getItem('userId')}
-                            />
+                        subscribeButton
                         ]}
                     >
                         <List.Item.Meta
@@ -44,6 +46,7 @@ function VideoDetailPage(props) {
                         description={VideoDetail.description}
                     />
                     </List.Item>
+                    <Comment postId={videoId}/>
                 </div>
             </Col>
             <Col lg={6} xs={24}>
