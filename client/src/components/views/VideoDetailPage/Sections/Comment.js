@@ -3,12 +3,11 @@ import Axios from 'axios'
 import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
 
-function Comment(props) {
-    const videoId = props.postId;
+function Comment({refreshFunction, commentList, videoId}) {
     const user = useSelector(state => state.user);
-    const [commentValue, setcommentValue] = useState("");
+    const [commentValue, setCommentValue] = useState("");
     const handleClick = (event) => {
-        setcommentValue(event.currentTarget.value)
+        setCommentValue(event.currentTarget.value)
     }
 
     const onSubmit = (event) => {
@@ -16,13 +15,13 @@ function Comment(props) {
         const variables = {
             content: commentValue,
             writer: user.userData._id,
-            postId: videoId,
+            videoId: videoId,
         }
         Axios.post('/api/comment/saveComment', variables)
         .then(response => {
             if(response.data.success){
-                console.log(response.data.result)
-                
+                refreshFunction(response.data.result);
+                setCommentValue('');
             } else {
 
             }
@@ -37,7 +36,7 @@ function Comment(props) {
 
             {/* Comment Lists*/}
 
-            {props.commentList && props.commentList.map((comment, index) => (!comment.responseTo && <SingleComment comment={comment} postId={videoId} />))}
+            {commentList && commentList.map((comment, index) => (!comment.responseTo && <SingleComment refreshFunction={refreshFunction} comment={comment} videoId={videoId} />))}
 
 
             <form style={{ display: 'flex' }} onSubmit={onSubmit} >

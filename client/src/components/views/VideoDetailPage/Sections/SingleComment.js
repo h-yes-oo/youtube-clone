@@ -5,12 +5,10 @@ import { useSelector } from 'react-redux';
 
 const { TextArea } = Input;
 
-function SingleComment(props) {
-    const videoId = props.postId;
+function SingleComment({refreshFunction, comment, videoId}) {
     const user = useSelector(state => state.user);
     const [openReply, setOpenReply] = useState(false);
     const [commentValue, setCommentValue] = useState('');
-
     const onClickReplyOpen = () => {
         setOpenReply(!openReply);
     }
@@ -24,13 +22,14 @@ function SingleComment(props) {
         const variables = {
             content: commentValue,
             writer: user.userData._id,
-            postId: videoId,
-            responseTo: props.comment._id
+            videoId: videoId,
+            responseTo: comment._id
         }
         Axios.post('/api/comment/saveComment', variables)
         .then(response => {
             if(response.data.success){
-                console.log(response.data.result)
+                setCommentValue('');
+                refreshFunction(response.data.result)
             } else {
 
             }
@@ -45,9 +44,9 @@ function SingleComment(props) {
         <div>
             <Comment 
                 actions={actions}
-                author={props.comment.writer.name}
-                avatar={<Avatar src={props.comment.writer.image} alt />}
-                content={<p>{props.comment.content}</p>}
+                author={comment.writer.name}
+                avatar={<Avatar src={comment.writer.image} alt />}
+                content={<p>{comment.content}</p>}
             />
             { openReply &&
                 <form style={{ display: 'flex', marginBottom: '5px' }} onSubmit={onSubmit} >
