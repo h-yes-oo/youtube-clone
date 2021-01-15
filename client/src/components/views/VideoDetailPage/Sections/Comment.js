@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Axios from 'axios'
 import { useSelector } from 'react-redux';
 import SingleComment from './SingleComment';
+import ReplyComment from './ReplyComment'
 
 function Comment({refreshFunction, commentList, videoId}) {
     const user = useSelector(state => state.user);
@@ -36,7 +37,14 @@ function Comment({refreshFunction, commentList, videoId}) {
 
             {/* Comment Lists*/}
 
-            {commentList && commentList.map((comment, index) => (!comment.responseTo && <SingleComment refreshFunction={refreshFunction} comment={comment} videoId={videoId} />))}
+            {commentList && commentList.map((comment, index) => (
+                    (!comment.responseTo && 
+                        <>
+                            <SingleComment refreshFunction={refreshFunction} comment={comment} videoId={videoId} />
+                            <ReplyComment commentList={commentList} parentCommentId={comment._id} refreshFunction={refreshFunction} videoId={videoId}/>
+                        </>
+                    )
+            ))}
 
 
             <form style={{ display: 'flex' }} onSubmit={onSubmit} >
