@@ -40,12 +40,10 @@ function VideoUploadPage(props) {
             header: {'content-type': 'multipart/form-data'}
         }
         formData.append("file",files[0])
-        //console.log(files)
 
         Axios.post('/api/video/uploadfiles', formData, config)
             .then(response => {
                 if(response.data.success) {
-                    console.log(response.data);
 
                     let variable = {
                         url: response.data.url,

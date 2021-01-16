@@ -27,7 +27,6 @@ function VideoDetailPage(props) {
         .then(response => {
             if(response.data.success){
                 setComments(response.data.comments);
-                //console.log(response.data.comments);
             } else {
                 alert('코멘트 정보를 가져오는데에 실패했습니다.')
             }

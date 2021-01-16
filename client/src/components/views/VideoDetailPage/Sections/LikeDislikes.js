@@ -20,7 +20,6 @@ function LikeDislikes(props) {
         .then(response => {
             if(response.data.success){
                 setLikes(response.data.likes.length);
-                console.log(response.data.likes);
                 response.data.likes.map(like => {
                     if(like.userId === props.userId) {
                         setLikeAction(true);
